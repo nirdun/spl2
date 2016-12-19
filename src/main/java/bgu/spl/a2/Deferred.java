@@ -1,5 +1,5 @@
 package bgu.spl.a2;
-
+import java.util.*;
 /**
  * this class represents a deferred result i.e., an object that eventually will
  * be resolved to hold a result of some operation, the class allows for getting
@@ -15,10 +15,14 @@ package bgu.spl.a2;
  * @param <T> the result type
  */
 public class Deferred<T> {
-    T result;
-    Boolean resolved = false; // move to constructor
+    private T result;
+    private boolean answer;
+    private List<Runnable> callBacks;
 
-
+    public Deferred() {
+        answer = false;
+        callBacks = new ArrayList<>();
+    }
 
     /**
      *
@@ -28,8 +32,10 @@ public class Deferred<T> {
      * this object is not yet resolved
      */
     public T get() {
-        //TODO: replace method body with real implementation
-        throw new UnsupportedOperationException("Not Implemented Yet.");
+        if (isResolved()){
+            return result;
+        }
+        throw new IllegalStateException("Not resolved Yet.");
     }
 
     /**
@@ -54,9 +60,15 @@ public class Deferred<T> {
      * @throws IllegalStateException in the case where this object is already
      * resolved
      */
-    public void resolve(T value) {
-        //TODO: replace method body with real implementation
-        throw new UnsupportedOperationException("Not Implemented Yet.");
+    public synchronized void resolve(T value) {
+        if (!answer) {
+            answer = true;
+            result = value;
+        }
+        else{
+            throw new IllegalStateException("already resolved.");
+        }
+
     }
 
     /**
