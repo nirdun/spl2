@@ -44,8 +44,7 @@ public class Deferred<T> {
      * {@link #resolve(java.lang.Object)} has been called on this object before.
      */
     public boolean isResolved() {
-        //TODO: replace method body with real implementation
-        throw new UnsupportedOperationException("Not Implemented Yet.");
+        return answer;
     }
 
     /**
@@ -64,6 +63,10 @@ public class Deferred<T> {
         if (!answer) {
             answer = true;
             result = value;
+            for(Runnable callback : callBacks){
+                callback.run();
+                // TODO: should be deleted from list?
+            }
         }
         else{
             throw new IllegalStateException("already resolved.");
@@ -85,8 +88,13 @@ public class Deferred<T> {
      * resolved
      */
     public void whenResolved(Runnable callback) {
-        //TODO: replace method body with real implementation
-        throw new UnsupportedOperationException("Not Implemented Yet.");
+        // TODO: how to handle the "Note" (leak and more then one issue)
+        if (answer) {
+            callback.run();
+        }
+        else {
+            callBacks.add(callback);
+        }
     }
 
 }
