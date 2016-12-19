@@ -1,5 +1,8 @@
 package bgu.spl.a2;
 
+import java.util.Queue;
+import java.util.Stack;
+
 /**
  * this class represents a single work stealing processor, it is
  * {@link Runnable} so it is suitable to be executed by threads.

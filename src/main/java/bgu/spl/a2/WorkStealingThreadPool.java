@@ -1,5 +1,7 @@
 package bgu.spl.a2;
 
+import java.lang.reflect.Array;
+import java.util.*;
 /**
  * represents a work stealing thread pool - to understand what this class does
  * please refer to your assignment.
@@ -11,6 +13,11 @@ package bgu.spl.a2;
  * methods
  */
 public class WorkStealingThreadPool {
+    private Deque<Task<?>> [] taskssQueues;
+    private Processor [] processorsArr;
+    private Thread [] threadsArr;
+    private int nthreads;
+    private VersionMonitor verMonitor;
 
     /**
      * creates a {@link WorkStealingThreadPool} which has nthreads
@@ -25,8 +32,11 @@ public class WorkStealingThreadPool {
      * thread pool
      */
     public WorkStealingThreadPool(int nthreads) {
-        //TODO: replace method body with real implementation
-        throw new UnsupportedOperationException("Not Implemented Yet.");
+        this.nthreads = nthreads;
+        taskssQueues = new Deque[nthreads];
+        processorsArr = new Processor[nthreads];
+        threadsArr = new Thread[nthreads];
+
     }
 
     /**
@@ -35,8 +45,10 @@ public class WorkStealingThreadPool {
      * @param task the task to execute
      */
     public void submit(Task<?> task) {
-        //TODO: replace method body with real implementation
-        throw new UnsupportedOperationException("Not Implemented Yet.");
+        Random rnd = new Random();
+        int executeProc = rnd.nextInt(nthreads);
+        taskssQueues[executeProc].addLast(task);
+        // TODO: should inc version monitor?
     }
 
     /**
@@ -60,7 +72,10 @@ public class WorkStealingThreadPool {
      * start the threads belongs to this thread pool
      */
     public void start() {
-        //TODO: replace method body with real implementation
+        for (Deque proccessor:taskssQueues){
+
+        }
+
         throw new UnsupportedOperationException("Not Implemented Yet.");
     }
 

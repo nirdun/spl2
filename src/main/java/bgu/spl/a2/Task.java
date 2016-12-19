@@ -14,7 +14,7 @@ import java.util.Collection;
  * @param <R> the task result type
  */
 public abstract class Task<R> {
-
+    private Deferred<R> defer = new Deferred<>();
     /**
      * start handling the task - note that this method is protected, a handler
      * cannot call it directly but instead must use the
