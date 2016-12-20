@@ -13,7 +13,7 @@ import java.util.*;
  * methods
  */
 public class WorkStealingThreadPool {
-    private Deque<Task<?>> [] taskssQueues;
+    private Deque<Task<?>> [] tasksQueues;
     private Processor [] processorsArr;
     private Thread [] threadsArr;
     private int nthreads;
@@ -33,7 +33,7 @@ public class WorkStealingThreadPool {
      */
     public WorkStealingThreadPool(int nthreads) {
         this.nthreads = nthreads;
-        taskssQueues = new Deque[nthreads];
+        tasksQueues = new Deque[nthreads];
         processorsArr = new Processor[nthreads];
         threadsArr = new Thread[nthreads];
 
@@ -47,7 +47,7 @@ public class WorkStealingThreadPool {
     public void submit(Task<?> task) {
         Random rnd = new Random();
         int executeProc = rnd.nextInt(nthreads);
-        taskssQueues[executeProc].addLast(task);
+        tasksQueues[executeProc].addLast(task);
         // TODO: should inc version monitor?
     }
 
@@ -64,19 +64,23 @@ public class WorkStealingThreadPool {
      * shutdown the queue is itself a processor of this queue
      */
     public void shutdown() throws InterruptedException {
-        //TODO: replace method body with real implementation
-        throw new UnsupportedOperationException("Not Implemented Yet.");
+        for(Thread t:threadsArr){
+            t.interrupt();
+        }
     }
 
     /**
      * start the threads belongs to this thread pool
      */
     public void start() {
-        for (Deque proccessor:taskssQueues){
-
+        for(Thread t:threadsArr){
+            t.start();
         }
 
-        throw new UnsupportedOperationException("Not Implemented Yet.");
+    }
+
+    public Deque<Task<?>> getDeque(int id){
+        return tasksQueues[id];
     }
 
 }
