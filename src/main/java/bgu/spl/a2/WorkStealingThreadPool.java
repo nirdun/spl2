@@ -76,11 +76,14 @@ public class WorkStealingThreadPool {
         for(Thread t:threadsArr){
             t.start();
         }
-
     }
 
     public Deque<Task<?>> getDeque(int id){
         return tasksQueues[id];
+    }
+
+    public VersionMonitor getVersionMonitor(){
+        return verMonitor;
     }
 
 }

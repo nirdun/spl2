@@ -47,18 +47,16 @@ public class Processor implements Runnable {
         while (!Thread.currentThread().isInterrupted()) {
 
             if (!(dequeProc.isEmpty())) {
-                dequeProc.getFirst().handle(this);
-                dequeProc.removeFirst();
+                dequeProc.pollFirst().handle(this);
             }
 
             if (dequeProc.isEmpty()){
                 boolean successSteal=stealTask();
                 if(!successSteal){
                     try {
-                      //  Thread.currentThread().wait();
-
+                        pool.getVersionMonitor().await(pool.getVersionMonitor().getVersion());
                     }catch (InterruptedException ix){
-
+                        //continue loop.
                     }
                 }
             }
