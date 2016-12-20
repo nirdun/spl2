@@ -42,15 +42,25 @@ public class Processor implements Runnable {
 
     @Override
     public void run() {
-        // TODO: 19.12.2016 if not steal from all todo wahit by monitor
+        // TODO: 19.12.2016 if not steal from all todo wait by monitor
         Deque<Task<?>> dequeProc = pool.getDeque(id);
         while (!Thread.currentThread().isInterrupted()) {
 
             if (!(dequeProc.isEmpty())) {
                 dequeProc.getFirst().handle(this);
+                dequeProc.removeFirst();
             }
+
             if (dequeProc.isEmpty()){
                 boolean successSteal=stealTask();
+                if(!successSteal){
+                    try {
+                      //  Thread.currentThread().wait();
+
+                    }catch (InterruptedException ix){
+
+                    }
+                }
             }
         }
 
