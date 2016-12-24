@@ -16,11 +16,11 @@ import java.util.*;
  */
 public class Deferred<T> {
     private T result;
-    private boolean answer;
+    private boolean isResolved;
     private List<Runnable> callBacks;
 
     public Deferred() {
-        answer = false;
+        isResolved = false;
         callBacks = new ArrayList<>();
     }
 
@@ -44,7 +44,7 @@ public class Deferred<T> {
      * {@link #resolve(java.lang.Object)} has been called on this object before.
      */
     public boolean isResolved() {
-        return answer;
+        return isResolved;
     }
 
     /**
@@ -60,8 +60,9 @@ public class Deferred<T> {
      * resolved
      */
     public synchronized void resolve(T value) {
-        if (!answer) {
-            answer = true;
+        if (!isResolved) {
+            isResolved = true;
+            //how to sync isresolved true
             result = value;
             for(Runnable callback : callBacks){
                 callback.run();
@@ -89,7 +90,7 @@ public class Deferred<T> {
      */
     public void whenResolved(Runnable callback) {
         // TODO: how to handle the "Note" (leak and more then one issue)
-        if (answer) {
+        if (isResolved) {
             callback.run();
         }
         else {

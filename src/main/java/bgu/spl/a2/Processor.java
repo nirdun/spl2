@@ -1,5 +1,7 @@
 package bgu.spl.a2;
 
+import sun.awt.windows.ThemeReader;
+
 import java.util.Deque;
 import java.util.Queue;
 import java.util.Stack;
@@ -43,19 +45,22 @@ public class Processor implements Runnable {
     @Override
     public void run() {
         // TODO: 19.12.2016 if not steal from all todo wait by monitor
-        Deque<Task<?>> dequeProc = pool.getDeque(id);
         while (!Thread.currentThread().isInterrupted()) {
-
-            if (!(dequeProc.isEmpty())) {
-                dequeProc.pollFirst().handle(this);
-            }
-
-            if (dequeProc.isEmpty()){
-                boolean successSteal=stealTask();
-                if(!successSteal){
+            if (pool.haveTasks(id)) {
+                Task t = pool.getNextTask(id);
+                // Check if stolen.
+                if (t != null) {
+                    t.handle(this);
+                }
+                //todo null pointer from ger next teask
+            } else {
+                boolean successSteal = pool.stealTasks(id);
+                if (!successSteal) {
                     try {
                         pool.getVersionMonitor().await(pool.getVersionMonitor().getVersion());
-                    }catch (InterruptedException ix){
+                    } catch (InterruptedException ix) {
+                        System.out.println("in InterruptedException");
+                        Thread.currentThread().interrupt();
                         //continue loop.
                     }
                 }
@@ -64,9 +69,14 @@ public class Processor implements Runnable {
 
     }
 
-    private synchronized boolean stealTask(){
-
-
+    public void addTasks(Task<?>... task) {
+        pool.addTasksToProcessor(id, task);
     }
+
+    public void addOneTask(Task<?> task) {
+        pool.addOneTaskToProcessor(id, task);
+    }
+
+
 
 }

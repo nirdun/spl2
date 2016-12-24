@@ -25,15 +25,19 @@ public class VersionMonitor {
         return monitorCount.get();
     }
 
-    public void inc() {
+    public synchronized void inc() {
         monitorCount.addAndGet(1);
         notifyAll();
     }
 
-    public void await(int version) throws InterruptedException {
+    public synchronized void await(int version) throws InterruptedException {
         // Wait as long as parameter version matches current version
         while (getVersion() == version) {
             wait();
+
+//            if(Thread.currentThread().isInterrupted()){
+//                throw new InterruptedException();
+//            }
         }
 
     }
