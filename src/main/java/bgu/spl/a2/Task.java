@@ -78,8 +78,8 @@ public abstract class Task<R> {
 
         for (Task<?> t : tasks) {
             t.getResult().whenResolved(() -> {
-                numOfTasks.decrementAndGet();
-                if (numOfTasks.get() == 0) {
+                AtomicInteger taskRemain = new AtomicInteger(numOfTasks.decrementAndGet());
+                if (taskRemain.get() == 0) {
                     taskCallback = callback;
                     processor.addOneTask(this);
                 }
